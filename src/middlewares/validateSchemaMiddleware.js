@@ -1,15 +1,17 @@
 
  
-import categoriesSchema from "../schemas/categoriesSchema.js"
-import trim from "trim"
 import { stripHtml } from "string-strip-html"
+import trim from "trim"
+import categoriesSchema from "../schemas/categoriesSchema.js"
+import gamesSchema from "../schemas/gamesSchema.js"
 
 function sanitizeString(string){
     return trim(stripHtml(string).result)
 }
 
 const schemas = {
-    "/categories": categoriesSchema
+    "/categories": categoriesSchema,
+    "/games": gamesSchema
 }
 
 export default async function validateSchemaMiddleware(req, res, next){
