@@ -2,11 +2,11 @@ import connection from "../db.js";
 
 export async function allCategories ( req, res ) {
     try {
-        const arrayCategories = await connection.query(`
+        const { rows: arrayCategories } = await connection.query(`
             SELECT  *
               FROM  categories
         `)
-        res.send(arrayCategories.rows)
+        res.send(arrayCategories)
     } catch (error) {
         res.status(500).send(error.message)
     }

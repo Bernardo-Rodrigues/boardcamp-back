@@ -6,7 +6,7 @@ export async function allGames ( req, res ) {
     try {
         if(name){
             const capitalizeName = name.charAt(0).toUpperCase() + name.slice(1)
-            const arrayGames = await connection.query(`
+            const { rows: arrayGames } = await connection.query(`
                 SELECT  games.*, 
                         categories.name AS "categoryName"
                   FROM  games
@@ -16,10 +16,10 @@ export async function allGames ( req, res ) {
                   LIKE  $1
             `, [ `${capitalizeName}%` ])
     
-            return res.send(arrayGames.rows)
+            return res.send(arrayGames)
         }
     
-        const arrayGames = await connection.query(`
+        const { rows: arrayGames } = await connection.query(`
             SELECT  games.*, 
                     categories.name AS "categoryName"
               FROM  games
@@ -27,7 +27,7 @@ export async function allGames ( req, res ) {
                 ON  games."categoryId" = categories.id
         `)
     
-        res.send(arrayGames.rows)
+        res.send(arrayGames)
     } catch (error) {
         res.status(500).send(error.message)
     }
