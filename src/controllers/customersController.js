@@ -1,6 +1,6 @@
 import connection from "../db.js";
 
-export default async function allCustomers ( req, res ){
+export async function allCustomers ( req, res ){
     const { cpf } = req.query
 
     try {
@@ -8,7 +8,7 @@ export default async function allCustomers ( req, res ){
             const { rows: arrayCustomers } = await connection.query(`
                 SELECT  *
                   FROM  customers
-                 WHERE  customers.cpf 
+                 WHERE  cpf 
                   LIKE  $1
             `, [ `${cpf}%` ])
     
@@ -21,6 +21,24 @@ export default async function allCustomers ( req, res ){
         `)
         
         res.send(arrayCustomers)
+    } catch (error) {
+        res.status(500).send(error.message)
+    }
+}
+
+export async function customer ( req, res ){
+    const { id } = req.params
+
+    try {
+        const { rows: [customer] } = await connection.query(`
+                SELECT  *
+                  FROM  customers
+                 WHERE  id = $1
+        `, [ id.slice(1) ])
+    
+        if(!customer) return res.sendStatus(404)
+
+        res.send(customer)
     } catch (error) {
         res.status(500).send(error.message)
     }

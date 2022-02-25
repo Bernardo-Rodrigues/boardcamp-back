@@ -11,7 +11,7 @@ export async function allGames ( req, res ) {
                         categories.name AS "categoryName"
                   FROM  games
                   JOIN  categories 
-                    ON  games."categoryId" = categories.id
+                    ON  "categoryId" = categories.id
                  WHERE  games.name 
                   LIKE  $1
             `, [ `${capitalizeName}%` ])
@@ -24,7 +24,7 @@ export async function allGames ( req, res ) {
                     categories.name AS "categoryName"
               FROM  games
               JOIN  categories
-                ON  games."categoryId" = categories.id
+                ON  "categoryId" = categories.id
         `)
     
         res.send(arrayGames)

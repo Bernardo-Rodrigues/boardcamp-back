@@ -11,7 +11,7 @@ function sanitizeString(string){
 
 const schemas = {
     "/categories": categoriesSchema,
-    "/games": gamesSchema
+    "/games": gamesSchema,
 }
 
 export default async function validateSchemaMiddleware(req, res, next){
