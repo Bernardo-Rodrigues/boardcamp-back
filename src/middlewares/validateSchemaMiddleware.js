@@ -3,6 +3,7 @@
 import { stripHtml } from "string-strip-html"
 import trim from "trim"
 import categoriesSchema from "../schemas/categoriesSchema.js"
+import customersSchema from "../schemas/costumersSchema.js"
 import gamesSchema from "../schemas/gamesSchema.js"
 
 function sanitizeString(string){
@@ -12,6 +13,7 @@ function sanitizeString(string){
 const schemas = {
     "/categories": categoriesSchema,
     "/games": gamesSchema,
+    "/customers": customersSchema
 }
 
 export default async function validateSchemaMiddleware(req, res, next){
