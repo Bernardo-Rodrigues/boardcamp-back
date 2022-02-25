@@ -1,11 +1,15 @@
 import connection from "../db.js";
 
 export async function allCategories ( req, res ) {
-    const arrayCategories = await connection.query(`
-        SELECT *
-        FROM categories
-    `)
-    res.send(arrayCategories.rows)
+    try {
+        const arrayCategories = await connection.query(`
+            SELECT  *
+            FROM    categories
+        `)
+        res.send(arrayCategories.rows)
+    } catch (error) {
+        res.status(500).send(error.message)
+    }
 }
 
 export async function newCategorie ( req, res ) {
@@ -13,17 +17,17 @@ export async function newCategorie ( req, res ) {
     
     try {
         const haveCategorie = await connection.query(`
-            SELECT *
-                FROM categories
-                WHERE name=$1
+            SELECT  *
+            FROM    categories
+            WHERE   name=$1
         `, [ name ]);
         
         if(haveCategorie.rows.length) return res.sendStatus(409)
     
         await connection.query(`
-            INSERT INTO 
-                categories ( name )
-                VALUES ( $1 )
+            INSERT 
+            INTO    categories ( name )
+            VALUES  ( $1 )
         `, [ name ]);
 
         res.sendStatus(201)
