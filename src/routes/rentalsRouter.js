@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { allRentals } from "../controllers/rentalsController.js";
+import { listRentals } from "../controllers/rentalsController.js";
 
 const rentalsRouter = Router();
 
-rentalsRouter.get("/rentals", allRentals)
+rentalsRouter.get("/rentals", listRentals)
 
 export default rentalsRouter;

@@ -1,36 +1,28 @@
-import connection from "../db.js";
+import * as categoriesService from "../services/categoriesService.js"
+import { NoContent, Conflict } from "../err/index.js"
 
-export async function allCategories ( req, res ) {
+export async function listCategories ( req, res ) {
     try {
-        const { rows: arrayCategories } = await connection.query(`
-            SELECT  *
-              FROM  categories
-        `)
-        res.send(arrayCategories)
+        const categories = await categoriesService.list();
+
+        res.send(categories)
     } catch (error) {
+        if (error instanceof NoContent) return res.status(error.status).send([]);
+
         res.status(500).send(error.message)
     }
 }
 
-export async function newCategorie ( req, res ) {
+export async function insertCategorie ( req, res ) {
     const { name } = req.body
     
     try {
-        const haveCategorie = await connection.query(`
-            SELECT  *
-              FROM  categories
-             WHERE  name = $1
-        `, [ name ]);
-        
-        if(haveCategorie.rows.length) return res.sendStatus(409)
-    
-        await connection.query(`
-            INSERT INTO  categories ( name )
-                 VALUES  ( $1 )
-        `, [ name ]);
+        await categoriesService.insert(name)
 
         res.sendStatus(201)
     } catch (error) {
+        if (error instanceof Conflict) return res.status(error.status).send(error.message);
+
         res.status(500).send(error.message)
     }
 }

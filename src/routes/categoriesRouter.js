@@ -1,11 +1,10 @@
 import Router from "express"
-import { allCategories, newCategorie } from "../controllers/categoriesController.js";
+import { insertCategorie, listCategories } from "../controllers/categoriesController.js";
 import validateSchemaMiddleware from "../middlewares/validateSchemaMiddleware.js";
-import categoriesSchema from "../schemas/categoriesSchema.js";
 
 const categoriesRouer = Router();
 
-categoriesRouer.get("/categories", allCategories)
-categoriesRouer.post("/categories", validateSchemaMiddleware , newCategorie)
+categoriesRouer.get("/categories", listCategories)
+categoriesRouer.post("/categories", validateSchemaMiddleware , insertCategorie)
 
 export default categoriesRouer;
