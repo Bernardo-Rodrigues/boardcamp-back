@@ -60,3 +60,16 @@ export async function remove (id){
 
   return true;
 }
+
+export async function update (id, delayFee){
+  const result = await connection.query(`
+      UPDATE  rentals
+         SET  "returnDate" = $1,
+              "delayFee" = $2
+       WHERE  id = $3
+      `, [ dayjs(), delayFee , id ]);
+
+  if (!result.rowCount) return false;
+
+  return true;
+}

@@ -3,6 +3,9 @@ import * as customerRepository from "../repositories/customersRepository.js"
 import * as gamesRepository from "../repositories/gamesRepository.js"
 import organizeRentalsObject from '../utils/organizeRentalsObject.js';
 import { NoContent, NotFound, BadRequest} from "../err/index.js"
+import dayjs from 'dayjs';
+import relativeTime from "dayjs/plugin/relativeTime.js"
+dayjs.extend(relativeTime)
 
 export async function list({customerId, gameId}){
     let filter = ""
@@ -53,8 +56,29 @@ export async function insert(rentalInfo){
 export async function remove(rentalId){
     const rentalExists = await rentalsRepository.find("id", rentalId);
     if (!rentalExists) throw new NotFound('O aluguel não existe');
+    if(rentalExists.returnDate !== null) throw new BadRequest('O aluguel já foi finalizado');
 
     const result = await rentalsRepository.remove(rentalId);
+
+    if (!result) throw new Error();
+
+    return true;
+}
+
+export async function update(rentalId){
+    const rentalExists = await rentalsRepository.find("id", rentalId);
+    if (!rentalExists) throw new NotFound('O aluguel não existe');
+    if(rentalExists.returnDate !== null) throw new BadRequest('O aluguel já foi finalizado');
+
+    const { rentDate, originalPrice, daysRented } = rentalExists
+    const returnDate = dayjs(rentDate).add(daysRented, 'day')
+    const DAY_IN_MS = 86400000
+    const daysDifference = parseInt( dayjs().diff(returnDate) / DAY_IN_MS )
+    let delayFee = daysDifference * (originalPrice / daysRented)
+
+    if(delayFee < 0) delayFee = 0
+
+    const result = await rentalsRepository.update(rentalId, delayFee);
 
     if (!result) throw new Error();
 

@@ -42,3 +42,17 @@ export async function removeRental ( req, res ){
       res.status(500).send(error.message)
   }
 }
+
+export async function updateRental ( req, res ){
+  const { id } = req.params
+  
+  try {
+      await rentalsService.update(id)
+
+      res.sendStatus(200)
+  } catch (error) {
+      if (error instanceof BadRequest || error instanceof NotFound) return res.status(error.status).send(error.message);
+
+      res.status(500).send(error.message)
+  }
+}
