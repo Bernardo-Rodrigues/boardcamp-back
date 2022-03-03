@@ -1,5 +1,5 @@
 import * as rentalsService from "../services/rentalsService.js"
-import { NoContent, BadRequest } from "../err/index.js";
+import { NoContent, BadRequest, NotFound } from "../err/index.js";
 
 export async function listRentals ( req, res ){
     const filters = req.query
@@ -27,4 +27,18 @@ export async function insertRental ( req, res ){
 
         res.status(500).send(error.message)
     }
+}
+
+export async function removeRental ( req, res ){
+  const { id } = req.params
+  
+  try {
+      await rentalsService.remove(id)
+
+      res.sendStatus(200)
+  } catch (error) {
+      if (error instanceof BadRequest || error instanceof NotFound) return res.status(error.status).send(error.message);
+
+      res.status(500).send(error.message)
+  }
 }

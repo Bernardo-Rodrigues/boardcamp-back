@@ -2,8 +2,7 @@ import * as rentalsRepository from '../repositories/rentalsRepository.js';
 import * as customerRepository from "../repositories/customersRepository.js"
 import * as gamesRepository from "../repositories/gamesRepository.js"
 import organizeRentalsObject from '../utils/organizeRentalsObject.js';
-import NoContent from '../err/NoContentError.js';
-import BadRequest from '../err/BadRequestError.js';
+import { NoContent, NotFound, BadRequest} from "../err/index.js"
 
 export async function list({customerId, gameId}){
     let filter = ""
@@ -23,7 +22,6 @@ export async function list({customerId, gameId}){
     }
     
     let rentals =  await rentalsRepository.list(filter, queryArgs)
-
     if (!rentals || !rentals?.length) throw new NoContent();
     
     rentals = organizeRentalsObject(rentals)
@@ -42,12 +40,21 @@ export async function insert(rentalInfo){
 
     if(daysRented <= 0) throw new BadRequest('Valor da quantidade de dias do aluguel inválido');
 
-    let filter = `WHERE r."gameId" = $1`
-    let queryArgs = [gameId]
-    let gameRentals =  await rentalsRepository.list(filter, queryArgs)
+    let gameRentals =  await rentalsRepository.list(`WHERE r."gameId" = $1`, [gameId])
     if(gameRentals?.length === gameExists.stockTotal) throw new BadRequest('Não existem mais jogos disponíveis');
 
     const result = await rentalsRepository.insert({...rentalInfo, gamePrice:gameExists.pricePerDay});
+
+    if (!result) throw new Error();
+
+    return true;
+}
+
+export async function remove(rentalId){
+    const rentalExists = await rentalsRepository.find("id", rentalId);
+    if (!rentalExists) throw new NotFound('O aluguel não existe');
+
+    const result = await rentalsRepository.remove(rentalId);
 
     if (!result) throw new Error();
 

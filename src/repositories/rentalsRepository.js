@@ -25,11 +25,36 @@ export async function list (filter, queryArgs){
     return rentals;
 }
 
+export async function find(column, value){
+  const { rows: [rental]} = await connection.query(`
+      SELECT  * 
+        FROM  rentals 
+       WHERE  ${column} = $1
+  `,[value]);
+
+  if (!rental) return null;
+
+  return rental;
+}
+
+
 export async function insert ({customerId, gameId, daysRented, gamePrice}){
   const result = await connection.query(`
       INSERT INTO  rentals ("customerId", "gameId", "rentDate", "daysRented", "returnDate", "originalPrice", "delayFee")
            VALUES  ($1, $2, $3, $4, $5, $6, $7)
       `, [ customerId, gameId, dayjs(), daysRented, null, (daysRented * gamePrice) , null]);
+
+  if (!result.rowCount) return false;
+
+  return true;
+}
+
+export async function remove (id){
+  const result = await connection.query(`
+      DELETE
+        FROM  rentals
+       WHERE  id = $1
+      `, [ id ]);
 
   if (!result.rowCount) return false;
 
