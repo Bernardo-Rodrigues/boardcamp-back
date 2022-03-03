@@ -2,10 +2,10 @@ import * as gamesService from "../services/gamesService.js"
 import { NoContent, BadRequest, Conflict } from "../err/index.js";
 
 export async function listGames ( req, res ) {
-    const { name } = req.query
+    const filters = req.query
 
     try {
-        const games = await gamesService.list(name)
+        const games = await gamesService.list(filters)
     
         res.send(games)
     } catch (error) {

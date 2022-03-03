@@ -2,8 +2,10 @@ import * as categoriesService from "../services/categoriesService.js"
 import { NoContent, Conflict } from "../err/index.js"
 
 export async function listCategories ( req, res ) {
+    const filters = req.query
+
     try {
-        const categories = await categoriesService.list();
+        const categories = await categoriesService.list(filters);
 
         res.send(categories)
     } catch (error) {

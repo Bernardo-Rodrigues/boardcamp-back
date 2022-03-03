@@ -2,10 +2,10 @@ import * as customersService from "../services/customersService.js"
 import { NoContent, NotFound, Conflict } from "../err/index.js";
 
 export async function listCustomers ( req, res ){
-    const { cpf } = req.query
+    const filters = req.query
 
     try {
-        const customers = await customersService.list(cpf)
+        const customers = await customersService.list(filters)
         
         res.send(customers)
     } catch (error) {

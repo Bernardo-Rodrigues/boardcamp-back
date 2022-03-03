@@ -5,24 +5,27 @@ import organizeRentalsObject from '../utils/organizeRentalsObject.js';
 import { NoContent, NotFound, BadRequest} from "../err/index.js"
 import dayjs from 'dayjs';
 import relativeTime from "dayjs/plugin/relativeTime.js"
+import paginationFilter from '../utils/paginationFilter.js';
 dayjs.extend(relativeTime)
 
-export async function list({customerId, gameId}){
-    let filter = ""
-    let queryArgs = []
+export async function list({customerId, gameId, offset, limit}){
+    const partialFilter = ""
+    const partialQueryArgs = []
+    const partialArgs = 1
 
-    if (customerId && gameId) {
-        filter = `WHERE r."customerId" = $1 AND r."gameId" = $2`
-        queryArgs = [customerId, gameId]
+    if (customerId) {
+        partialFilter += ` WHERE r."customerId" = $${args}`
+        partialQueryArgs.push(customerId)
+        partialArgs++
     }
-    else if (customerId){
-        filter = `WHERE r."customerId" = $1 `
-        queryArgs = [customerId]
+    if (gameId) {
+        if(args === 1) partialFilter = ` WHERE r."gameId" = $${args}`
+        else partialFilter += ` AND r."gameId" = $${args}`
+        partialQueryArgs.push(gameId)
+        partialArgs++
     }
-    else if (gameId) {
-        filter = `WHERE r."gameId" = $1`
-        queryArgs = [gameId]
-    }
+
+    const [filter, queryArgs] = paginationFilter(partialFilter, partialQueryArgs, partialArgs, offset, limit)
     
     let rentals =  await rentalsRepository.list(filter, queryArgs)
     if (!rentals || !rentals?.length) throw new NoContent();

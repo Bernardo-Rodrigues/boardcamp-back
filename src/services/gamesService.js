@@ -3,17 +3,22 @@ import * as categoriesRepository from "../repositories/categoriesRepository.js"
 import NoContent from '../err/NoContentError.js';
 import Conflict from '../err/ConflictError.js';
 import BadRequest from "../err/BadRequestError.js"
+import paginationFilter from '../utils/paginationFilter.js';
 
-export async function list(name){
-    let filter = ""
-    let queryArgs = []
+export async function list({name, offset, limit}){
+    const partialFilter = ""
+    const partialQueryArgs = []
+    const partialArgs = 1
 
     if (name) {
         const capitalizeName = name.charAt(0).toUpperCase() + name.slice(1)
         
-        filter = "WHERE games.name LIKE $1"
-        queryArgs = [`${capitalizeName}%`]
+        partialFilter += ` WHERE games.name LIKE $${args}`
+        partialQueryArgs.push(`${capitalizeName}%`)
+        partialArgs++
     }
+
+    const [filter, queryArgs] = paginationFilter(partialFilter, partialQueryArgs, partialArgs, offset, limit)
     
     const games = await gamesRepository.list(filter, queryArgs);
     if (!games || !games?.length) throw new NoContent();
