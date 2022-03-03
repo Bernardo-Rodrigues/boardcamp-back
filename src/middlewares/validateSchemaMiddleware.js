@@ -5,6 +5,7 @@ import trim from "trim"
 import categoriesSchema from "../schemas/categoriesSchema.js"
 import customersSchema from "../schemas/costumersSchema.js"
 import gamesSchema from "../schemas/gamesSchema.js"
+import rentalsSchema from "../schemas/rentalsSchema.js"
 
 function sanitizeString(string){
     return trim(stripHtml(string).result)
@@ -13,7 +14,8 @@ function sanitizeString(string){
 const schemas = {
     "/categories": categoriesSchema,
     "/games": gamesSchema,
-    "/customers": customersSchema
+    "/customers": customersSchema,
+    "/rentals": rentalsSchema
 }
 
 export default async function validateSchemaMiddleware(req, res, next){

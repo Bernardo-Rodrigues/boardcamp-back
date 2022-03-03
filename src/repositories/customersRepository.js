@@ -12,11 +12,11 @@ export async function list (filter, queryArgs){
     return customers;
 }
 
-export async function find(filter, value){
+export async function find(column, value){
     const { rows: [customer]} = await connection.query(`
         SELECT  * 
           FROM  customers 
-         WHERE  ${filter} = $1
+         WHERE  ${column} = $1
     `,[value]);
 
     if (!customer) return null;

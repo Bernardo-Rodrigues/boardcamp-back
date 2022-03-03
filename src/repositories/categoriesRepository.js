@@ -11,13 +11,11 @@ export async function list (){
     return categories;
 }
 
-export async function find(filter, value){
-    console.log(filter, value)
-
+export async function find(column, value){
     const { rows: [category]} = await connection.query(`
         SELECT  * 
           FROM  categories 
-         WHERE  ${filter} = $1
+         WHERE  ${column} = $1
     `, [value]);
 
     if (!category) return null;

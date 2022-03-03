@@ -1,7 +1,6 @@
 import connection from "../db.js";
 
 export async function list (filter, queryArgs){
-    console.log(filter, queryArgs)
     const { rows: games } = await connection.query(`
         SELECT  games.*, 
                 categories.name AS "categoryName"
@@ -16,12 +15,12 @@ export async function list (filter, queryArgs){
     return games;
 }
 
-export async function find(name){
+export async function find(column, value){
     const { rows: [game]} = await connection.query(`
         SELECT  * 
           FROM  games 
-         WHERE  name = $1
-    `,[name]);
+         WHERE  ${column} = $1
+    `,[value]);
 
     if (!game) return null;
 

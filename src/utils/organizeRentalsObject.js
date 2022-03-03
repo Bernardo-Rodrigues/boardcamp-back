@@ -9,7 +9,7 @@ export default function organizeRentalsObject(arrayRentals){
         daysRented: rental.daysRented,
         returnDate: rental.returnDate !== null ? dayjs(rental.returnDate).format("YYYY-MM-DD") : rental.returnDate,
         originalPrice: rental.originalPrice,
-        dealyFee: rental.dealyFee,
+        dealyFee: rental.delayFee,
         customer:{
             id: rental.customerId,
             name: rental.customerName
