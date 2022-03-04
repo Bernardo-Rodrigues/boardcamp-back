@@ -2,8 +2,12 @@ import connection from "../db.js";
 
 export async function list (filter, queryArgs){
     const { rows: customers } = await connection.query(`
-        SELECT  *
+        SELECT  customers.*,
+                COUNT (rentals."customerId") AS "rentalsCount"
           FROM  customers
+     LEFT JOIN  rentals
+            ON  customers.id = rentals."customerId"
+      GROUP BY  customers.id
      ${filter}
     `, queryArgs);
 

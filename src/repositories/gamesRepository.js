@@ -3,10 +3,14 @@ import connection from "../db.js";
 export async function list (filter, queryArgs){
     const { rows: games } = await connection.query(`
         SELECT  games.*, 
-                categories.name AS "categoryName"
+                categories.name AS "categoryName",
+                COUNT(rentals."gameId") AS "rentalsCount"
           FROM  games
           JOIN  categories
             ON  "categoryId" = categories.id
+     LEFT JOIN  rentals
+            ON  games.id = rentals."gameId"
+      GROUP BY  games.id, categories.name
      ${filter}
     `, queryArgs);
 
