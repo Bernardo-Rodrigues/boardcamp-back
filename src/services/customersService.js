@@ -1,23 +1,11 @@
 import * as customerRepository from '../repositories/customersRepository.js';
-import NoContent from '../err/NoContentError.js';
-import Conflict from '../err/ConflictError.js';
-import NotFound from "../err/NotFoundError.js"
-import paginationFilter from '../utils/paginationFilter.js';
+import { NoContent, NotFound, Conflict} from "../err/index.js"
+import createFilter from '../utils/createFilter.js';
 
-export async function list({cpf, offset, limit}){
-    const partialFilter = ""
-    const partialQueryArgs = []
-    const partialArgs = 1
+export async function list(filters){
+    const [filter, queryArgs] = createFilter("customers", filters)
 
-    if(cpf){
-        partialFilter += ` WHERE  cpf LIKE  $${args}`
-        partialQueryArgs.push(`${cpf}%`)
-        partialArgs++
-    }
-
-    const [filter, queryArgs] = paginationFilter(partialFilter, partialQueryArgs, partialArgs, offset, limit)
-
-    const customers = await customerRepository.list(filter,queryArgs);
+    const customers = await customerRepository.list(filter, queryArgs);
     if (!customers || !customers?.length) throw new NoContent();
 
     return customers;

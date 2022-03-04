@@ -1,14 +1,9 @@
 import * as categoriesReposity from '../repositories/categoriesRepository.js';
-import NoContent from '../err/NoContentError.js';
-import Conflict from '../err/ConflictError.js';
-import paginationFilter from '../utils/paginationFilter.js';
+import { NoContent, Conflict} from "../err/index.js"
+import createFilter from '../utils/createFilter.js';
 
-export async function list({offset, limit}){
-    const partialFilter = ""
-    const partialQueryArgs = []
-    const partialArgs = 1
-
-    const [filter, queryArgs] = paginationFilter(partialFilter, partialQueryArgs, partialArgs, offset, limit)
+export async function list(filters){
+    const [filter, queryArgs] = createFilter("category", filters)
 
     const categories = await categoriesReposity.list(filter, queryArgs);
     if (!categories || !categories?.length) throw new NoContent();

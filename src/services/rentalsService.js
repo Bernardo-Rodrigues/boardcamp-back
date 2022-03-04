@@ -1,31 +1,15 @@
 import * as rentalsRepository from '../repositories/rentalsRepository.js';
 import * as customerRepository from "../repositories/customersRepository.js"
 import * as gamesRepository from "../repositories/gamesRepository.js"
-import organizeRentalsObject from '../utils/organizeRentalsObject.js';
 import { NoContent, NotFound, BadRequest} from "../err/index.js"
+import organizeRentalsObject from '../utils/organizeRentalsObject.js';
+import createFilter from '../utils/createFilter.js';
 import dayjs from 'dayjs';
 import relativeTime from "dayjs/plugin/relativeTime.js"
-import paginationFilter from '../utils/paginationFilter.js';
 dayjs.extend(relativeTime)
 
-export async function list({customerId, gameId, offset, limit}){
-    const partialFilter = ""
-    const partialQueryArgs = []
-    const partialArgs = 1
-
-    if (customerId) {
-        partialFilter += ` WHERE r."customerId" = $${args}`
-        partialQueryArgs.push(customerId)
-        partialArgs++
-    }
-    if (gameId) {
-        if(args === 1) partialFilter = ` WHERE r."gameId" = $${args}`
-        else partialFilter += ` AND r."gameId" = $${args}`
-        partialQueryArgs.push(gameId)
-        partialArgs++
-    }
-
-    const [filter, queryArgs] = paginationFilter(partialFilter, partialQueryArgs, partialArgs, offset, limit)
+export async function list(filters){
+    const [filter, queryArgs] = createFilter("rentals", filters)
     
     let rentals =  await rentalsRepository.list(filter, queryArgs)
     if (!rentals || !rentals?.length) throw new NoContent();

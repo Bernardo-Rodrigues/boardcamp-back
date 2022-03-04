@@ -4,7 +4,7 @@ export async function list (filter, queryArgs){
     const { rows: categories } = await connection.query(`
         SELECT  * 
           FROM  categories
-     ${filter}
+        ${filter}
     `, queryArgs);
 
     if (!categories.length) return null;
