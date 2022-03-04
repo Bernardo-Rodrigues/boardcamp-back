@@ -1,6 +1,7 @@
+import dayjs from "dayjs"
 import tableColumnNumber from "./tableColumnNumber.js"
 
-export default function createFilter(table, {cpf, name, customerId, gameId, order, desc, offset, limit}){
+export default function createFilter(table, {cpf, name, customerId, gameId, status, startDate, order, desc, offset, limit}){
     let filter = ""
     let queryArgs = []
     let args = 1
@@ -26,11 +27,24 @@ export default function createFilter(table, {cpf, name, customerId, gameId, orde
             args++
         }
         if (gameId) {
-            if(args === 1) filter = ` WHERE r."gameId" = $${args}`
+            if(args === 1) filter += ` WHERE r."gameId" = $${args}`
             else filter += ` AND r."gameId" = $${args}`
             queryArgs.push(gameId)
             args++
         }
+        if (status === "open") {
+            if(args === 1) filter += ` WHERE r."returnDate" IS NULL`
+            else filter += ` AND r."returnDate" IS NULL`
+        } else if (status === "closed") {
+            if(args === 1) filter = ` WHERE r."returnDate" IS NOT NULL`
+            filter = ` AND r."returnDate" IS NOT NULL`
+        }
+        if (startDate) {
+            if(args === 1) filter += ` WHERE r."rentDate" >= $${args}`
+            else filter += ` AND r."rentDate" >= $${args}`
+            queryArgs.push(dayjs(startDate).format("YYYY-MM-DD"))
+            args++
+        } 
     }
     
     if (order) {
