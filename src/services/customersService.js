@@ -1,12 +1,15 @@
 import * as customerRepository from '../repositories/customersRepository.js';
 import { NoContent, NotFound, Conflict} from "../err/index.js"
 import createFilter from '../utils/createFilter.js';
+import organizeCustomersObject from '../utils/organizeCustomersObject.js';
 
 export async function list(filters){
     const [filter, queryArgs] = createFilter("customers", filters)
 
-    const customers = await customerRepository.list(filter, queryArgs);
+    let customers = await customerRepository.list(filter, queryArgs);
     if (!customers || !customers?.length) throw new NoContent();
+
+    customers = organizeCustomersObject(customers)
 
     return customers;
 }
