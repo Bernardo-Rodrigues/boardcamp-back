@@ -59,8 +59,7 @@ export async function update(rentalId){
 
     const { rentDate, originalPrice, daysRented } = rentalExists
     const returnDate = dayjs(rentDate).add(daysRented, 'day')
-    const DAY_IN_MS = 86400000
-    const daysDifference = parseInt( dayjs().diff(returnDate) / DAY_IN_MS )
+    const daysDifference = parseInt( dayjs().diff(returnDate, "day"))
     let delayFee = daysDifference * (originalPrice / daysRented)
 
     if(delayFee < 0) delayFee = 0
