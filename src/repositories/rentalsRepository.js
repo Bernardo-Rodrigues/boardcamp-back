@@ -73,3 +73,20 @@ export async function update (id, delayFee){
 
   return true;
 }
+
+export async function getMetrics (filter, queryArgs){
+  const { rows: [metrics] } = await connection.query(`
+      SELECT  SUM ("originalPrice") + SUM("delayFee") AS revenue,
+              COUNT (id) as rentals,
+              ROUND (
+                  (SUM ("originalPrice") + SUM("delayFee")) / COUNT (id)
+                  ::DECIMAL,2
+              ) AS average
+        FROM  rentals r
+   ${filter}
+  `, queryArgs);
+
+  if (!metrics) return null;
+
+  return metrics;
+}

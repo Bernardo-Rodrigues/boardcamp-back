@@ -30,7 +30,7 @@ export async function insert(rentalInfo){
 
     if(daysRented <= 0) throw new BadRequest('Valor da quantidade de dias do aluguel inválido');
 
-    let gameRentals =  await rentalsRepository.list(`WHERE r."gameId" = $1`, [gameId])
+    let gameRentals =  await rentalsRepository.list(`WHERE r."gameId" = $1 AND r."delayFee" IS  NULL`, [gameId])
     if(gameRentals?.length === gameExists.stockTotal) throw new BadRequest('Não existem mais jogos disponíveis');
 
     const result = await rentalsRepository.insert({...rentalInfo, gamePrice:gameExists.pricePerDay});
@@ -70,4 +70,16 @@ export async function update(rentalId){
     if (!result) throw new Error();
 
     return true;
+}
+
+export async function getMetrics(filters){
+    const [filter, queryArgs] = createFilter("rentals", filters)
+    
+    let metrics =  await rentalsRepository.getMetrics(filter, queryArgs)
+
+    if (!metrics) throw new Error();
+    if(metrics.revenue === null) metrics.revenue = 0
+    if(metrics.average === null) metrics.average = 0
+    
+    return metrics;
 }

@@ -56,3 +56,17 @@ export async function updateRental ( req, res ){
       res.status(500).send(error.message)
   }
 }
+
+export async function getMetrics ( req, res ){
+    const filters = req.query
+    
+    try {
+        const metrics = await rentalsService.getMetrics(filters)
+
+        res.send(metrics)
+    } catch (error) {
+      if (error instanceof NoContent) return res.status(error.status).send([]);
+
+      res.status(500).send(error.message)
+    }
+}
