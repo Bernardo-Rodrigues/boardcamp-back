@@ -9,9 +9,9 @@ export async function listRentals ( req, res ){
 
         res.send(rentals)
     } catch (error) {
-      if (error instanceof NoContent) return res.status(error.status).send([]);
+        if (error instanceof NoContent) return res.status(error.status).send([]);
 
-      res.status(500).send(error.message)
+        res.status(500).send(error.message)
     }
 }
 
@@ -33,13 +33,13 @@ export async function removeRental ( req, res ){
   const { id } = req.params
   
   try {
-      await rentalsService.remove(id)
+        await rentalsService.remove(id)
 
-      res.sendStatus(200)
+        res.sendStatus(200)
   } catch (error) {
-      if (error instanceof BadRequest || error instanceof NotFound) return res.status(error.status).send(error.message);
+        if (error instanceof BadRequest || error instanceof NotFound) return res.status(error.status).send(error.message);
 
-      res.status(500).send(error.message)
+        res.status(500).send(error.message)
   }
 }
 
@@ -47,13 +47,13 @@ export async function updateRental ( req, res ){
   const { id } = req.params
   
   try {
-      await rentalsService.update(id)
+        await rentalsService.update(id)
 
-      res.sendStatus(200)
+        res.sendStatus(200)
   } catch (error) {
-      if (error instanceof BadRequest || error instanceof NotFound) return res.status(error.status).send(error.message);
+        if (error instanceof BadRequest || error instanceof NotFound) return res.status(error.status).send(error.message);
 
-      res.status(500).send(error.message)
+        res.status(500).send(error.message)
   }
 }
 
@@ -65,8 +65,6 @@ export async function getMetrics ( req, res ){
 
         res.send(metrics)
     } catch (error) {
-      if (error instanceof NoContent) return res.status(error.status).send([]);
-
       res.status(500).send(error.message)
     }
 }
