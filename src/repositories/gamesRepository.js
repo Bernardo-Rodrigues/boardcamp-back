@@ -10,8 +10,8 @@ export async function list (filter, queryArgs){
             ON  "categoryId" = categories.id
      LEFT JOIN  rentals
             ON  games.id = rentals."gameId"
-      GROUP BY  games.id, categories.name
      ${filter}
+      GROUP BY  games.id, categories.name
     `, queryArgs);
 
     if (!games.length) return null;

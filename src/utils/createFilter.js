@@ -4,52 +4,43 @@ import tableColumnNumber from "./tableColumnNumber.js"
 export default function createFilter(table, {cpf, name, customerId, gameId, status, startDate, endDate, order, desc, offset, limit}){
     let filter = ""
     let queryArgs = []
-    let args = 1
 
     if(table === "customers"){
         if(cpf){
-            filter += ` WHERE  cpf LIKE  $${args}`
             queryArgs.push(`${cpf}%`)
-            args++
+            filter += ` WHERE  cpf LIKE  $${queryArgs.length}`
         }
     }else if(table === "games"){
         if (name) {
-            const capitalizeName = name.charAt(0).toUpperCase() + name.slice(1)
-            
-            filter += ` WHERE games.name LIKE $${args}`
-            queryArgs.push(`${capitalizeName}%`)
-            args++
+            queryArgs.push(`${name}%`)
+            filter += ` WHERE games.name ILIKE $${queryArgs.length}`
         }
     }else if(table === "rentals"){
         if (customerId) {
-            filter += ` WHERE r."customerId" = $${args}`
             queryArgs.push(customerId)
-            args++
+            filter += ` WHERE r."customerId" = $${queryArgs.length}`
         }
         if (gameId) {
-            if(args === 1) filter += ` WHERE r."gameId" = $${args}`
-            else filter += ` AND r."gameId" = $${args}`
             queryArgs.push(gameId)
-            args++
+            if(queryArgs.length === 1) filter += ` WHERE r."gameId" = $${queryArgs.length}`
+            else filter += ` AND r."gameId" = $${queryArgs.length}`
         }
         if (status === "open") {
-            if(args === 1) filter += ` WHERE r."returnDate" IS NULL`
+            if(queryArgs.length === 0) filter += ` WHERE r."returnDate" IS NULL`
             else filter += ` AND r."returnDate" IS NULL`
         } else if (status === "closed") {
-            if(args === 1) filter += ` WHERE r."returnDate" IS NOT NULL`
+            if(queryArgs.length === 0) filter += ` WHERE r."returnDate" IS NOT NULL`
             else filter += ` AND r."returnDate" IS NOT NULL`
         }
         if (startDate) {
-            if(args === 1) filter += ` WHERE r."rentDate" >= $${args}`
-            else filter += ` AND r."rentDate" >= $${args}`
             queryArgs.push(dayjs(startDate).format("YYYY-MM-DD"))
-            args++
+            if(queryArgs.length === 1) filter += ` WHERE r."rentDate" >= $${queryArgs.length}`
+            else filter += ` AND r."rentDate" >= $${queryArgs.length}`
         } 
         if (endDate) {
-            if(args === 1) filter += ` WHERE r."rentDate" <= $${args}`
-            else filter += ` AND r."rentDate" <= $${args}`
             queryArgs.push(dayjs(endDate).format("YYYY-MM-DD"))
-            args++
+            if(queryArgs.length === 1) filter += ` WHERE r."rentDate" <= $${queryArgs.length}`
+            else filter += ` AND r."rentDate" <= $${queryArgs.length}`
         } 
     }
     
@@ -60,13 +51,12 @@ export default function createFilter(table, {cpf, name, customerId, gameId, stat
         if(desc) filter += ` DESC`
     }
     if (limit) {
-        filter += ` LIMIT $${args}`
         queryArgs.push(limit)
-        args++
+        filter += ` LIMIT $${queryArgs.length}`
     }
     if (offset) {
-        filter += ` OFFSET $${args}`
         queryArgs.push(offset)
+        filter += ` OFFSET $${queryArgs.length}`
     }
     
     return [filter, queryArgs]

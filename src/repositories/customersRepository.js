@@ -7,8 +7,8 @@ export async function list (filter, queryArgs){
           FROM  customers
      LEFT JOIN  rentals
             ON  customers.id = rentals."customerId"
+      ${filter}
       GROUP BY  customers.id
-     ${filter}
     `, queryArgs);
 
     if (!customers.length) return null;
