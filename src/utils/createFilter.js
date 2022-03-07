@@ -10,11 +10,13 @@ export default function createFilter(table, {cpf, name, customerId, gameId, stat
             queryArgs.push(`${cpf}%`)
             filter += ` WHERE  cpf LIKE  $${queryArgs.length}`
         }
+        filter += ` GROUP BY  customers.id`
     }else if(table === "games"){
         if (name) {
             queryArgs.push(`${name}%`)
             filter += ` WHERE games.name ILIKE $${queryArgs.length}`
         }
+        filter += ` GROUP BY  games.id, categories.name`
     }else if(table === "rentals"){
         if (customerId) {
             queryArgs.push(customerId)

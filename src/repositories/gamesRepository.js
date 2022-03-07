@@ -11,7 +11,6 @@ export async function list (filter, queryArgs){
      LEFT JOIN  rentals
             ON  games.id = rentals."gameId"
      ${filter}
-      GROUP BY  games.id, categories.name
     `, queryArgs);
 
     if (!games.length) return null;

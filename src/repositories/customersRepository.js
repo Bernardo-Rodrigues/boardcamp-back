@@ -8,7 +8,6 @@ export async function list (filter, queryArgs){
      LEFT JOIN  rentals
             ON  customers.id = rentals."customerId"
       ${filter}
-      GROUP BY  customers.id
     `, queryArgs);
 
     if (!customers.length) return null;
