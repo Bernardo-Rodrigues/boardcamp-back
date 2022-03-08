@@ -1,10 +1,11 @@
 import connection from "../db.js";
 
-export async function list (filter, queryArgs){
+export async function list (where, filter, queryArgs){
     const { rows: categories } = await connection.query(`
         SELECT  * 
           FROM  categories
-        ${filter}
+      ${where}
+     ${filter}
     `, queryArgs);
 
     if (!categories.length) return null;

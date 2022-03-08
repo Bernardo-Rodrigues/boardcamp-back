@@ -4,9 +4,9 @@ import createFilter from '../utils/createFilter.js';
 import organizeCustomersObject from '../utils/organizeCustomersObject.js';
 
 export async function list(filters){
-    const [filter, queryArgs] = createFilter("customers", filters)
+    const [where, filter, queryArgs] = createFilter("customers", filters)
 
-    let customers = await customerRepository.list(filter, queryArgs);
+    let customers = await customerRepository.list(where, filter, queryArgs);
     if (!customers || !customers?.length) throw new NoContent();
 
     customers = organizeCustomersObject(customers)

@@ -1,6 +1,6 @@
 import connection from "../db.js";
 
-export async function list (filter, queryArgs){
+export async function list (where, filter, queryArgs){
     const { rows: games } = await connection.query(`
         SELECT  games.*, 
                 categories.name AS "categoryName",
@@ -10,6 +10,8 @@ export async function list (filter, queryArgs){
             ON  "categoryId" = categories.id
      LEFT JOIN  rentals
             ON  games.id = rentals."gameId"
+      ${where}
+      GROUP BY  games.id, categories.name
      ${filter}
     `, queryArgs);
 

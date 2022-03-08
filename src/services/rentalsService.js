@@ -9,9 +9,9 @@ import relativeTime from "dayjs/plugin/relativeTime.js"
 dayjs.extend(relativeTime)
 
 export async function list(filters){
-    const [filter, queryArgs] = createFilter("rentals", filters)
+    const [where, filter, queryArgs] = createFilter("rentals", filters)
     
-    let rentals =  await rentalsRepository.list(filter, queryArgs)
+    let rentals =  await rentalsRepository.list(where, filter, queryArgs)
     if (!rentals || !rentals?.length) throw new NoContent();
     
     rentals = organizeRentalsObject(rentals)

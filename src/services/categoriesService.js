@@ -3,9 +3,9 @@ import { NoContent, Conflict} from "../err/index.js"
 import createFilter from '../utils/createFilter.js';
 
 export async function list(filters){
-    const [filter, queryArgs] = createFilter("category", filters)
+    const [where, filter, queryArgs] = createFilter("category", filters)
 
-    const categories = await categoriesReposity.list(filter, queryArgs);
+    const categories = await categoriesReposity.list(where, filter, queryArgs);
     if (!categories || !categories?.length) throw new NoContent();
 
     return categories;

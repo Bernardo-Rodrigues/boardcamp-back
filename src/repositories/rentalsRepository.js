@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import connection from "../db.js";
 
-export async function list (filter, queryArgs){
+export async function list (where, filter, queryArgs){
     const { rows: rentals } = await connection.query(`
         SELECT  r.*,
                 cu.id AS "customerId",
@@ -17,6 +17,7 @@ export async function list (filter, queryArgs){
             ON  r."gameId" = g.id
           JOIN  categories ca
             ON  g."categoryId" = ca.id
+      ${where}
      ${filter}
     `, queryArgs);
 

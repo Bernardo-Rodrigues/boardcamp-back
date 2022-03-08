@@ -1,12 +1,14 @@
 import connection from "../db.js";
 
-export async function list (filter, queryArgs){
+export async function list (where, filter, queryArgs){
     const { rows: customers } = await connection.query(`
         SELECT  customers.*,
                 COUNT (rentals."customerId") AS "rentalsCount"
           FROM  customers
      LEFT JOIN  rentals
             ON  customers.id = rentals."customerId"
+      ${where}
+      GROUP BY  customers.id
       ${filter}
     `, queryArgs);
 

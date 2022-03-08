@@ -4,9 +4,9 @@ import { NoContent, BadRequest, Conflict} from "../err/index.js"
 import createFilter from '../utils/createFilter.js';
 
 export async function list(filters){
-    const [filter, queryArgs] = createFilter("games", filters)
+    const [where, filter, queryArgs] = createFilter("games", filters)
     
-    const games = await gamesRepository.list(filter, queryArgs);
+    const games = await gamesRepository.list(where, filter, queryArgs);
     if (!games || !games?.length) throw new NoContent();
 
     return games;
