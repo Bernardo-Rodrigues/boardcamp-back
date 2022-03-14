@@ -1,5 +1,3 @@
-
- 
 import { stripHtml } from "string-strip-html"
 import trim from "trim"
 import categoriesSchema from "../schemas/categoriesSchema.js"
