@@ -11,7 +11,8 @@ export async function listCustomers ( req, res ){
     } catch (error) {
         if (error instanceof NoContent) return res.status(error.status).send([]);
 
-        res.status(500).send(error.message)
+        console.log(error.message)
+        res.status(500).send("Unexpected server error")
     }
 }
 
@@ -25,7 +26,8 @@ export async function findCustomer ( req, res ){
     } catch (error) {
         if (error instanceof NotFound) return res.status(error.status).send(error.message);
 
-        res.status(500).send(error.message)
+        console.log(error.message)
+        res.status(500).send("Unexpected server error")
     }
 }
 
@@ -39,7 +41,8 @@ export async function insertCustomer ( req, res ){
     } catch (error) {
         if (error instanceof Conflict) return res.status(error.status).send(error.message);
 
-        res.status(500).send(error.message)
+        console.log(error.message)
+        res.status(500).send("Unexpected server error")
     }
 }
 
@@ -54,6 +57,7 @@ export async function updateCostumer ( req, res ){
     } catch (error) {
         if (error instanceof Conflict  || error instanceof NotFound) return res.status(error.status).send(error.message);
 
-        res.status(500).send(error.message)
+        console.log(error.message)
+        res.status(500).send("Unexpected server error")
     }
 }

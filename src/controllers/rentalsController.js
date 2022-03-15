@@ -11,7 +11,8 @@ export async function listRentals ( req, res ){
     } catch (error) {
         if (error instanceof NoContent) return res.status(error.status).send([]);
 
-        res.status(500).send(error.message)
+        console.log(error.message)
+        res.status(500).send("Unexpected server error")
     }
 }
 
@@ -25,7 +26,8 @@ export async function insertRental ( req, res ){
     } catch (error) {
         if (error instanceof BadRequest) return res.status(error.status).send(error.message);
 
-        res.status(500).send(error.message)
+        console.log(error.message)
+        res.status(500).send("Unexpected server error")
     }
 }
 
@@ -39,7 +41,8 @@ export async function removeRental ( req, res ){
   } catch (error) {
         if (error instanceof BadRequest || error instanceof NotFound) return res.status(error.status).send(error.message);
 
-        res.status(500).send(error.message)
+        console.log(error.message)
+        res.status(500).send("Unexpected server error")
   }
 }
 
@@ -53,7 +56,8 @@ export async function updateRental ( req, res ){
   } catch (error) {
         if (error instanceof BadRequest || error instanceof NotFound) return res.status(error.status).send(error.message);
 
-        res.status(500).send(error.message)
+        console.log(error.message)
+        res.status(500).send("Unexpected server error")
   }
 }
 
@@ -65,6 +69,7 @@ export async function getMetrics ( req, res ){
 
         res.send(metrics)
     } catch (error) {
-      res.status(500).send(error.message)
+        console.log(error.message)
+        res.status(500).send("Unexpected server error")
     }
 }
